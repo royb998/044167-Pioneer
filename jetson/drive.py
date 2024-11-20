@@ -41,7 +41,7 @@ class RobotDrive:
         """
         Stop the robot from moving.
         """
-        self._conn.write(course.Directive.stop.get_packet())
+        self._conn.write(course.Directive.stop().get_packet())
 
     def disconnect(self):
         """

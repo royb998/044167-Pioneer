@@ -43,7 +43,6 @@ class Directive:
     _stop = None
 
     @classmethod
-    @property
     def stop(cls) -> "Directive":
         if cls._stop is None:
             cls._stop = Directive("0 0 0")
@@ -62,7 +61,7 @@ class Directive:
     def get_packet(self):
         left, right = calc_values(self._x, self._y)
         return packets.build_packet(left, right,
-                                    stop=self is self.stop)
+                                    stop=self is self._stop)
 
 
 class Course:
@@ -71,7 +70,7 @@ class Course:
             lines = directives_file.readlines()
 
         self._directives = [Directive(line) for line in lines]
-        self._directives.append(Directive.stop)
+        self._directives.append(Directive.stop())
 
     def get_packets(self):
         return [directive.get_packet() for directive in self._directives]

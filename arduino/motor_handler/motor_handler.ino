@@ -1,8 +1,8 @@
 // Pinout
-const int RIGHT_MOTOR = 10;
-const int LEFT_MOTOR = 9;
-const int RIGHT_DIR = 8;
-const int LEFT_DIR = 7;
+const int LEFT_MOTOR = 10;
+const int RIGHT_MOTOR = 9;
+const int LEFT_DIR = 8;
+const int RIGHT_DIR = 7;
 const int ENABLE = 6; // Normally low
 
 typedef struct
@@ -32,7 +32,7 @@ void setup() {
   packet.right_value = 0;
   packet.left_forward = 0;
   packet.left_value = 0;
-  packet.motors_enable = 0;
+  packet.motors_enable = 1;
 }
 
 void loop()
@@ -44,8 +44,8 @@ void loop()
     
     analogWrite(LEFT_MOTOR, packet.left_value);
     analogWrite(RIGHT_MOTOR, packet.right_value);
-    digitalWrite(LEFT_DIR, !packet.left_forward);
-    digitalWrite(RIGHT_DIR, packet.right_forward);
+    digitalWrite(LEFT_DIR, packet.left_forward);
+    digitalWrite(RIGHT_DIR, !packet.right_forward);
     digitalWrite(ENABLE, packet.motors_enable);
   }
 }

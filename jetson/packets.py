@@ -6,7 +6,6 @@ import struct
 
 PACKET_FMT = "??BB?"
 
-
 # ----- Functions ----- #
 
 
