@@ -1,15 +1,17 @@
 # ----- Imports ----- #
 
 import struct
+from typing import Tuple
 
 # ----- Consts ----- #
 
-PACKET_FMT = "??BB?"
+COMMAND_PACKET_FMT = "??BB?"
+FEEDBACK_PACKET_FMT = "II"
 
 # ----- Functions ----- #
 
 
-def build_packet(left: int, right: int, stop=False) -> bytes:
+def build_command_packet(left: int, right: int, stop=False) -> bytes:
     """
     Build packet for drive command to send to the robot.
 
@@ -29,7 +31,16 @@ def build_packet(left: int, right: int, stop=False) -> bytes:
     left_value = abs(left)
     right_value = abs(right)
 
-    return struct.pack(PACKET_FMT,
+    return struct.pack(COMMAND_PACKET_FMT,
                        left_forward, right_forward,
                        left_value, right_value,
                        False)
+
+
+def parse_feedback(packet: bytes) -> Tuple[int, int]:
+    """
+    Parse the encoder feedback packet into left and right values.
+    """
+    left, right = struct.unpack(FEEDBACK_PACKET_FMT, packet)
+
+    return left, right

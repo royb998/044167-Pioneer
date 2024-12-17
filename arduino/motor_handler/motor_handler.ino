@@ -81,5 +81,5 @@ void loop()
     digitalWrite(ENABLE, packet.motors_enable);
   }
 
-  delay(100);
+  delay(10);
 }
