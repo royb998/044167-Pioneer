@@ -87,10 +87,13 @@ class Directive:
         x = round(self._x, 3)
         y = round(self._y, 3)
         time = round(self._time, 3)
-        return f"x: {x} y: {y} time: {time}"
+        return f"{x} {y} {time}"
 
     def __repr__(self):
-        return f"<Directive: {str(self)}>"
+        x = round(self._x, 3)
+        y = round(self._y, 3)
+        time = round(self._time, 3)
+        return f"<x: {x} y: {y} time: {time}>"
 
 
 class Course:

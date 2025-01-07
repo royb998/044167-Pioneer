@@ -73,13 +73,21 @@ void loop()
   if (Serial.available() >= sizeof(packet))
   {
     Serial.readBytes((uint8_t *)&packet, sizeof(packet));
-    
-    analogWrite(LEFT_MOTOR, packet.left_value);
-    analogWrite(RIGHT_MOTOR, packet.right_value);
-    digitalWrite(LEFT_DIR, packet.left_forward);
-    digitalWrite(RIGHT_DIR, !packet.right_forward);
-    digitalWrite(ENABLE, packet.motors_enable);
   }
+  else
+  {
+    packet.right_forward = 0;
+    packet.right_value = 0;
+    packet.left_forward = 0;
+    packet.left_value = 0;
+    packet.motors_enable = 1;
+  }
+  
+  analogWrite(LEFT_MOTOR, packet.left_value);
+  analogWrite(RIGHT_MOTOR, packet.right_value);
+  digitalWrite(LEFT_DIR, packet.left_forward);
+  digitalWrite(RIGHT_DIR, !packet.right_forward);
+  digitalWrite(ENABLE, packet.motors_enable);
 
   delay(10);
 }

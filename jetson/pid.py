@@ -28,7 +28,7 @@ class PID(object):
         P = self.kp * error
 
         # Integral term with anti-windup (simple clamping)
-        self.integral += error * dt
+        self.integral += (error * dt) * (-1 if ref < 0 else 1)
         I = self.ki * self.integral
 
         # Derivative term
