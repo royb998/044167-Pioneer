@@ -12,7 +12,7 @@ import packets
 
 # ----- Consts ----- #
 
-MOTOR_COMMAD_LIMIT = 0xD0
+MOTOR_COMMAND_LIMIT = 0xD0
 CONTROLLED_MOTOR_LIMIT = 0xDF
 
 # ----- Classes ----- #
@@ -61,6 +61,7 @@ class RobotDrive:
         with open(f"{directive} {round(time())}.csv", "wt") as f:
             f.writelines(self._lines)
 
+        self.stop()
         print(self._count)
 
     def command(self):
@@ -74,8 +75,8 @@ class RobotDrive:
         l_command, r_command = self._current_command.get_values()
 
         # Get feedbacks and adjust sign values.
-        l_command = self.limit_command(l_command, MOTOR_COMMAD_LIMIT)
-        r_command = self.limit_command(r_command, MOTOR_COMMAD_LIMIT)
+        l_command = self.limit_command(l_command, MOTOR_COMMAND_LIMIT)
+        r_command = self.limit_command(r_command, MOTOR_COMMAND_LIMIT)
         l_feedback = -l_feedback if l_command < 0 else l_feedback
         r_feedback = -r_feedback if r_command < 0 else r_feedback
 

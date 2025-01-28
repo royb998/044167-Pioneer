@@ -63,24 +63,15 @@ void setup() {
 
 void loop()
 {
-  // Send encoder counts to controller.
-  Serial.write((char *)&left_count, 4);
-  Serial.write((char *)&right_count, 4);
-  left_count = 0;
-  right_count = 0;
-
   // Read values once a full packet is available.
   if (Serial.available() >= sizeof(packet))
   {
     Serial.readBytes((uint8_t *)&packet, sizeof(packet));
-  }
-  else
-  {
-    packet.right_forward = 0;
-    packet.right_value = 0;
-    packet.left_forward = 0;
-    packet.left_value = 0;
-    packet.motors_enable = 1;
+    // Send encoder counts to controller.
+    Serial.write((char *)&left_count, 4);
+    Serial.write((char *)&right_count, 4);
+    left_count = 0;
+    right_count = 0;
   }
   
   analogWrite(LEFT_MOTOR, packet.left_value);
