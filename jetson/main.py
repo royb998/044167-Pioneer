@@ -32,16 +32,20 @@ def main(args):
     print("  - enter 'pid <lkp> <lki> <lkd> <rkp> <rki> <rkd>' to update left or right PID")
 
     while True:
-        match input("> ").split(maxsplit=1):
-            case ["q"]: break
-            case "d", text:
-                directive = Directive(text)
-                robot.drive(directive)
-            case "pid", text:
-                lkp, lki, lkd, rkp, rki, rkd = [float(x) for x in text.split(" ")]
-                robot.set_pid(lkp, lki, lkd, rkp, rki, rkd)
-            case _:
-                print("Unknown command")
+        user_input = input("> ")
+        if user_input == "q":
+            break
+
+        command, *args = user_input.split()
+
+        if command == "d":
+            directive = Directive(" ".join(args))
+            robot.drive(directive)
+        elif command == "pid":
+            lkp, lki, lkd, rkp, rki, rkd = [float(x) for x in args]
+            robot.set_pid(lkp, lki, lkd, rkp, rki, rkd)
+        else:
+            print("Unknown command")
 
     robot.disconnect()
 
