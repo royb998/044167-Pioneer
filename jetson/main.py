@@ -23,9 +23,8 @@ def get_pid_controllers(path_to_pid_json):
 
 def main(args):
     left_pid, right_pid = get_pid_controllers(args.pid)
-    robot = drive.RobotDrive(args.serial, left_pid, right_pid)
+    robot = drive.RobotDrive(args.port, left_pid, right_pid)
 
-    print("\033[2m(Enter 'quit' at any time to exit)\033[0m")
     print("Enter commands to execute:")
     print("  - enter 'q' to quit")
     print("  - enter 'r' to reestablish connection")
@@ -60,7 +59,7 @@ def main(args):
 def parse_arguments():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--serial",
+    parser.add_argument("--port",
                         help="Serial port for the motor controller",
                         type=str,
                         required=True)

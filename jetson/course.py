@@ -77,8 +77,9 @@ class Directive:
 
     def get_packet(self) -> bytes:
         left, right = _calc_lr_values(self._x, self._y)
+        stop = (left == 0) and (right == 0)
         return packets.build_command_packet(left, right,
-                                            stop=self is self._stop)
+                                            stop=stop)
 
     def get_values(self) -> Tuple[int, int]:
         return _calc_lr_values(self._x, self._y)

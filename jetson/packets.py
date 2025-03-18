@@ -11,7 +11,7 @@ FEEDBACK_PACKET_FMT = "II"
 # ----- Functions ----- #
 
 
-def build_command_packet(left: int, right: int, stop=False) -> bytes:
+def build_command_packet(left: int, right: int, stop: bool=False) -> bytes:
     """
     Build packet for drive command to send to the robot.
 
