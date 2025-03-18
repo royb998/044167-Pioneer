@@ -28,19 +28,26 @@ def main(args):
     print("\033[2m(Enter 'quit' at any time to exit)\033[0m")
     print("Enter commands to execute:")
     print("  - enter 'q' to quit")
+    print("  - enter 'r' to reestablish connection")
+    print("  - enter 's' to stop driving")
     print("  - enter 'd <directive>' to run a directive")
     print("  - enter 'pid <lkp> <lki> <lkd> <rkp> <rki> <rkd>' to update left or right PID")
 
     while True:
-        user_input = input("> ")
-        if user_input == "q":
+        command, *args = input("> ").split()
+
+        if command == "q":
             break
-
-        command, *args = user_input.split()
-
         if command == "d":
-            directive = Directive(" ".join(args))
-            robot.drive(directive)
+            try:
+                directive = Directive(" ".join(args))
+                robot.drive(directive)
+            except KeyboardInterrupt:
+                continue
+        elif command == "r":
+            robot.reconnect()
+        elif command == "s":
+            robot.stop()
         elif command == "pid":
             lkp, lki, lkd, rkp, rki, rkd = [float(x) for x in args]
             robot.set_pid(lkp, lki, lkd, rkp, rki, rkd)
