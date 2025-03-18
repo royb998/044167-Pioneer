@@ -9,12 +9,12 @@ import packets
 
 # ----- Consts ----- #
 
-MAX_MOTOR = 255
+_MAX_MOTOR = 255
 
 # ----- Functions ----- #
 
 
-def calc_lr_values(x: float, y: float) -> (int, int):
+def _calc_lr_values(x: float, y: float) -> (int, int):
     """
     Calculate the left-right values for the robot based no x-y coordinates given
     as input. The coordinates given describe forward speed (y) and rotation
@@ -36,15 +36,15 @@ def calc_lr_values(x: float, y: float) -> (int, int):
         print(x, y, left, right)
         raise ValueError("Invalid x,y values")
 
-    return int(left * MAX_MOTOR), int(right * MAX_MOTOR)
+    return int(left * _MAX_MOTOR), int(right * _MAX_MOTOR)
 
 
-def calc_xy_values(left: int, right: int) -> Tuple[float, float]:
-    if abs(left) > MAX_MOTOR or abs(right) > MAX_MOTOR:
+def _calc_xy_values(left: int, right: int) -> Tuple[float, float]:
+    if abs(left) > _MAX_MOTOR or abs(right) > _MAX_MOTOR:
         raise ValueError("Invalid L,R values")
 
-    x = (left - right) / (2 * MAX_MOTOR)
-    y = (right + left) / (2 * MAX_MOTOR)
+    x = (left - right) / (2 * _MAX_MOTOR)
+    y = (right + left) / (2 * _MAX_MOTOR)
 
     return x, y
 
@@ -62,7 +62,7 @@ class Directive:
 
     @staticmethod
     def from_left_right(left: int, right: int, time: float) -> "Directive":
-        x, y = calc_xy_values(left, right)
+        x, y = _calc_xy_values(left, right)
         return Directive(f"{x} {y} {time}")
 
     def __init__(self, line: str):
@@ -76,12 +76,12 @@ class Directive:
         return self._time
 
     def get_packet(self) -> bytes:
-        left, right = calc_lr_values(self._x, self._y)
+        left, right = _calc_lr_values(self._x, self._y)
         return packets.build_command_packet(left, right,
                                             stop=self is self._stop)
 
     def get_values(self) -> Tuple[int, int]:
-        return calc_lr_values(self._x, self._y)
+        return _calc_lr_values(self._x, self._y)
 
     def __str__(self):
         x = round(self._x, 3)

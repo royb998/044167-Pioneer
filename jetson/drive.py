@@ -19,16 +19,26 @@ CONTROLLED_MOTOR_LIMIT = 0xDF
 
 
 class RobotDrive:
-    def __init__(self, serial_port):
+    def __init__(self, serial_port, left_pid: pid.PID, right_pid: pid.PID):
         self._conn = serial.Serial(serial_port)
-        self._left_pid = pid.PID(0, kp=1.6, ki=0.02, kd=0)
-        self._right_pid = pid.PID(0, kp=1, ki=0.015, kd=0.05)
+        self._left_pid = left_pid
+        self._right_pid = right_pid
         # self._last: course.Directive = None
         self._count = 0
 
         self._lines = [f"l_command,r_command,l_feedback,r_feedback\n"]
         self._l_feedbacks = []
         self._r_feedbacks = []
+
+    def set_pid(self,
+                left_kp: float, left_ki: float, left_kd: float,
+                right_kp: float, right_ki: float, right_kd: float):
+        self._left_pid.kp = left_kp
+        self._left_pid.ki = left_ki
+        self._left_pid.kd = left_kd
+        self._right_pid.kp = right_kp
+        self._right_pid.ki = right_ki
+        self._right_pid.kd = right_kd
 
     def drive(self, directive: course.Directive):
         """
@@ -58,8 +68,8 @@ class RobotDrive:
         while time() - start_time < directive.duration:
             self.command()
 
-        with open(f"{directive} {round(time())}.csv", "wt") as f:
-            f.writelines(self._lines)
+        # with open(f"{directive} {round(time())}.csv", "wt") as f:
+        #     f.writelines(self._lines)
 
         self.stop()
         print(self._count)
@@ -112,6 +122,14 @@ class RobotDrive:
     def limit_command(value, limit):
         return round(min(max(value, -limit), limit))
 
+    def disable_pid(self):
+        self._left_pid.kp = 0
+        self._left_pid.ki = 0
+        self._left_pid.kd = 0
+        self._right_pid.kp = 0
+        self._right_pid.ki = 0
+        self._right_pid.kd = 0
+
     def stop(self):
         """
         Stop the robot from moving.
@@ -123,3 +141,7 @@ class RobotDrive:
         Close the connection to the motor controller.
         """
         self._conn.close()
+
+    def reconnect(self):
+        self._conn.close()
+        self._conn.open()
