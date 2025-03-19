@@ -40,8 +40,8 @@ def handle_pid_command(robot, args):
         kp, ki, kd = [float(x) for x in args[1:]]
         robot.set_pid(right=(kp, ki, kd), left=None)
     elif args[0] == "set":
-        lkp, lki, lkd, rkp, rki, rkd = [float(x) for x in args]
-        robot.set_pid((lkp, lki, lkd), (rkp, rki, rkd))
+        lkp, lki, lkd, rkp, rki, rkd = [float(x) for x in args[1:]]
+        robot.set_pid(left=(lkp, lki, lkd), right=(rkp, rki, rkd))
     elif args[0] == "save":
         filename = f"{args[1]}.json"
         params = robot.get_pid_params()
@@ -68,8 +68,11 @@ def run_loop(robot):
             except KeyboardInterrupt:
                 print("Cancelled by user")
                 robot.reconnect()
+            except Exception as e:
+                print(type(e), e)
+            finally:
+                robot.reconnect()
                 robot.stop()
-                continue
         elif command == "r":
             robot.reconnect()
         elif command == "s":

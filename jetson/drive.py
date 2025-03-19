@@ -30,9 +30,7 @@ class RobotDrive:
         self._l_feedbacks = []
         self._r_feedbacks = []
 
-    def set_pid(self, *,
-                left: tuple[float, float, float],
-                right: tuple[float, float, float]):
+    def set_pid(self, *, left: tuple, right: tuple):
         left_kp, left_ki, left_kd = left
         right_kp, right_ki, right_kd = right
         self._left_pid.kp = left_kp
