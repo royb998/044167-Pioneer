@@ -20,7 +20,7 @@ CONTROLLED_MOTOR_LIMIT = 0xDF
 
 class RobotDrive:
     def __init__(self, serial_port, left_pid: pid.PID, right_pid: pid.PID):
-        self._conn = serial.Serial(serial_port)
+        self._conn = serial.Serial(serial_port, 9600, timeout=1)
         self._left_pid = left_pid
         self._right_pid = right_pid
         # self._last: course.Directive = None
@@ -30,15 +30,31 @@ class RobotDrive:
         self._l_feedbacks = []
         self._r_feedbacks = []
 
-    def set_pid(self,
-                left_kp: float, left_ki: float, left_kd: float,
-                right_kp: float, right_ki: float, right_kd: float):
+    def set_pid(self, *,
+                left: tuple[float, float, float],
+                right: tuple[float, float, float]):
+        left_kp, left_ki, left_kd = left
+        right_kp, right_ki, right_kd = right
         self._left_pid.kp = left_kp
         self._left_pid.ki = left_ki
         self._left_pid.kd = left_kd
         self._right_pid.kp = right_kp
         self._right_pid.ki = right_ki
         self._right_pid.kd = right_kd
+
+    def get_pid_params(self):
+        return {
+            "left": {
+                "kp": self._left_pid.kp,
+                "ki": self._left_pid.ki,
+                "kd": self._left_pid.kd
+            },
+            "right": {
+                "kp": self._right_pid.kp,
+                "ki": self._right_pid.ki,
+                "kd": self._right_pid.kd
+            }
+        }
 
     def drive(self, directive: course.Directive):
         """
